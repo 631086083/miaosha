@@ -1,0 +1,8 @@
+*.so
+*.xo
+*.o
+.vscode/
+lib
+build
+.idea
+cmake-build-debug
