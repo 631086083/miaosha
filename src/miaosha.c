@@ -3,7 +3,7 @@
 //
 
 
-#include "limits.h"
+#include <limits.h>
 
 #include "redismodule.h"
 
@@ -45,17 +45,19 @@ int DecrByNoLess_RedisCommand(RedisModuleCtx *ctx, RedisModuleString **argv, int
             RedisModule_ReplyWithError(ctx, MIAOSHA_ERRORMSG_VALUE_NO_INT);
             return REDISMODULE_ERR;
         }
-        if ((decr < 0 && value < 0 && decr < (LLONG_MIN - value)) ||
-            (decr > 0 && value > 0 && decr > (LLONG_MAX - value)) ||
-            value + decr < bound) {
-            RedisModule_ReplyWithError(ctx, MIAOSHA_ERRORMSG_OVERFLOW);
-            return REDISMODULE_ERR;
-        }
+    }
+
+    if ((decr < 0 && value < 0 && decr < (LLONG_MIN - value)) ||
+        (decr > 0 && value > 0 && decr > (LLONG_MAX - value)) ||
+        value - decr < bound) {
+        RedisModule_ReplyWithError(ctx, MIAOSHA_ERRORMSG_OVERFLOW);
+        return REDISMODULE_ERR;
     }
     value -= decr;
 
     RedisModule_StringSet(key, RedisModule_CreateStringFromLongLong(ctx, value));
     RedisModule_Replicate(ctx, "SET", "sl", argv[1], value);
+
     RedisModule_ReplyWithLongLong(ctx, value);
     return REDISMODULE_OK;
 }
