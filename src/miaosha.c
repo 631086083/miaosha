@@ -67,7 +67,7 @@ int RedisModule_OnLoad(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) 
         == REDISMODULE_ERR)
         return REDISMODULE_ERR;
 
-    if (RedisModule_CreateCommand(ctx, "incrbynoless",
+    if (RedisModule_CreateCommand(ctx, "decrbynoless",
                                   DecrByNoLess_RedisCommand, "write deny-oom",
                                   0, 0, 0) == REDISMODULE_ERR)
         return REDISMODULE_ERR;
